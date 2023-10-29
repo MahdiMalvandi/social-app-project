@@ -1,0 +1,25 @@
+* {
+  margin: 0;
+  padding: 0;  box-sizing: border-box;
+}
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+body {
+  background-color: #030018;
+  position: relative;
+  height: 100%;
+  overflow-x: hidden;
+}
+a {
+  text-decoration: none;
+}
+ul {
+  list-style-type: none;
+}
+input {
+  border: none;
+  outline: none;
+}
