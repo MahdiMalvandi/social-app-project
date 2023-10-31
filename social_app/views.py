@@ -6,11 +6,10 @@ import random
 from django.contrib.auth import logout, login
 from .forms import *
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 
 
 # Create your views here.
-
-
 
 
 def log_out(request):
@@ -20,6 +19,26 @@ def log_out(request):
 
 def homepage(request):
     return render(request, 'parent/base.html', {"user": request.user})
+
+
+def ticket(request):
+    sent = False
+    if request.method == "POST":
+        form = TicketForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            user = request.user
+            email_message = f'You Have a message from {user.first_name} {user.last_name} ' \
+                            f'message title is {cd["title"]}' \
+                            f'message is:' \
+                            f' {cd["message"]}'
+            send_mail(cd['title'], email_message, 'mahdimalvandi6@gmail.com', ['zohrezahedi1981@gmail.com'], fail_silently=False)
+            sent = True
+
+            return redirect("social:home")
+    else:
+        form = TicketForm()
+    return render(request, "app/contactus.html", {"form": form})
 
 
 def register(request):

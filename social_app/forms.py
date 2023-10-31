@@ -64,3 +64,13 @@ class EditUserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email', 'bio', 'job', 'photo', 'phone']
+
+
+class TicketForm(forms.Form):
+    SUBJECT_CHOICES = (
+        ("پیشنهاد", "پیشنهاد"),
+        ("باگ", "باگ"),
+    )
+
+    message = forms.CharField(widget=forms.Textarea, required=True)
+    title = forms.ChoiceField(choices=SUBJECT_CHOICES, required=True)
