@@ -32,13 +32,12 @@ def ticket(request):
                             f'message title is {cd["title"]}' \
                             f'message is:' \
                             f' {cd["message"]}'
-            send_mail(cd['title'], email_message, 'mahdimalvandi6@gmail.com', ['zohrezahedi1981@gmail.com'], fail_silently=False)
+            send_mail(cd['title'], email_message, 'mahdimalvandi6@gmail.com', ['zohrezahedi1981@gmail.com', 'mahdimll1386@gmail.com'],
+                      fail_silently=False)
             sent = True
-
-            return redirect("social:home")
     else:
         form = TicketForm()
-    return render(request, "app/contactus.html", {"form": form})
+    return render(request, "app/contactus.html", {"form": form, 'sent': sent})
 
 
 def register(request):

@@ -3,3 +3,6 @@
     {{ form.as_div }}
     <input type="submit" value="send">
 </form>
+{% if sent %}
+    <h2>Your Ticket has been sent</h2>
+{% endif %}
