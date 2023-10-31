@@ -7,6 +7,7 @@ from django.contrib.auth import logout, login
 from .forms import *
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from .models import Post, User
 
 
 # Create your views here.
@@ -76,3 +77,20 @@ def profile(request):
 
     return HttpResponse(
         f'username => {user.username} full name => {user.first_name} {user.last_name} job => {user.job}')
+
+
+def post_list(request, category=None, page=1):
+
+    posts = Post.objects.all()
+    paginator = Paginator(posts, 12)
+    page_number = page
+    try:
+        posts = paginator.page(page_number)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    context = {
+        'posts': posts,
+    }
+    return render(request, "app/blog.html", context)
