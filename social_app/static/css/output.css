@@ -707,11 +707,6 @@ video {
   margin-right: auto;
 }
 
-.my-4 {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
 .ml-3 {
   margin-left: 0.75rem;
 }
@@ -738,6 +733,27 @@ video {
 
 .mt-6 {
   margin-top: 1.5rem;
+}
+
+.line-clamp-4 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.line-clamp-5 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
 }
 
 .block {
@@ -792,8 +808,24 @@ video {
   height: 2rem;
 }
 
+.h-\[18rem\] {
+  height: 18rem;
+}
+
 .h-full {
   height: 100%;
+}
+
+.h-1\/2 {
+  height: 50%;
+}
+
+.h-\[20rem\] {
+  height: 20rem;
+}
+
+.h-\[23rem\] {
+  height: 23rem;
 }
 
 .min-h-full {
@@ -820,6 +852,10 @@ video {
   width: 2rem;
 }
 
+.w-\[10rem\] {
+  width: 10rem;
+}
+
 .w-\[36\.125rem\] {
   width: 36.125rem;
 }
@@ -830,6 +866,18 @@ video {
 
 .w-full {
   width: 100%;
+}
+
+.w-40 {
+  width: 10rem;
+}
+
+.w-\[20rem\] {
+  width: 20rem;
+}
+
+.w-\[18rem\] {
+  width: 18rem;
 }
 
 .max-w-2xl {
@@ -886,12 +934,6 @@ video {
   cursor: pointer;
 }
 
-.select-none {
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
-}
-
 .grid-cols-1 {
   grid-template-columns: repeat(1, minmax(0, 1fr));
 }
@@ -914,6 +956,10 @@ video {
 
 .justify-between {
   justify-content: space-between;
+}
+
+.gap-4 {
+  gap: 1rem;
 }
 
 .gap-x-3 {
@@ -1029,6 +1075,11 @@ video {
   border-color: rgb(17 24 39 / 0.25);
 }
 
+.bg-blue-700 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(29 78 216 / var(--tw-bg-opacity));
+}
+
 .bg-gray-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
@@ -1056,6 +1107,11 @@ video {
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.bg-blue-800 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(30 64 175 / var(--tw-bg-opacity));
 }
 
 .bg-gradient-to-tr {
@@ -1172,10 +1228,6 @@ video {
 
 .pl-1 {
   padding-left: 0.25rem;
-}
-
-.pl-3 {
-  padding-left: 0.75rem;
 }
 
 .pr-2 {

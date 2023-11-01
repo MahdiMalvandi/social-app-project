@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User
+from .models import User, Post
 from django.contrib.auth.admin import UserAdmin
 
 
@@ -11,3 +11,8 @@ class UserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
         ('additional info', {'fields': ('date_of_birth', 'bio', 'photo', 'phone')}),
     )
+
+
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ["discription", "author"]

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.utils import timezone
+from taggit.managers import TaggableManager
+
 # Create your models here.
 
 
@@ -14,28 +15,25 @@ class User(AbstractUser):
 
 class Post(models.Model):
     """ post model for posts in my website """
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_post' )
-
-    reading_time = models.PositiveIntegerField(verbose_name="reading time")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_post')
     # data fields
-    caption = models.CharField(max_length=150)
-    text = models.TextField()
+    discription = models.CharField(max_length=1000)
 
     # date
-    publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    tags = TaggableManager()
+
     objects = models.Manager()
+
     class Meta:
         """ ORDERING """
-        ordering = ["-publish"]
+        ordering = ["-created"]
         indexes = [
-            models.Index(fields=["-publish"])
+            models.Index(fields=["-created"])
         ]
 
     def __str__(self):
         """ str for class """
-        return self.author
-
-
+        return self.discription
