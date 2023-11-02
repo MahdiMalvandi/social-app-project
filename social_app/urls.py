@@ -12,6 +12,7 @@ urlpatterns = [
     path('posts/', views.post_list, name="posts"),
     path('posts/tag/<str:tag_slug>', views.post_list, name="get_posts_tag"),
     path('profile/', views.profile, name="profile"),
+    path('posts/detail/<pk>/', views.detail_post, name="detail"),
     # login or log out
     path("login/", auth_views.LoginView.as_view(), name="login"),
     path('logout/', views.log_out, name="logout"),

@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from .models import Post, User
 from taggit.models import Tag
-
+from django.db.models import Count
 
 # Create your views here.
 
@@ -34,7 +34,8 @@ def ticket(request):
                             f'message title is {cd["title"]}' \
                             f'message is:' \
                             f' {cd["message"]}'
-            send_mail(cd['title'], email_message, 'mahdimalvandi6@gmail.com', ['zohrezahedi1981@gmail.com', 'mahdimll1386@gmail.com'],
+            send_mail(cd['title'], email_message, 'mahdimalvandi6@gmail.com',
+                      ['zohrezahedi1981@gmail.com', 'mahdimll1386@gmail.com'],
                       fail_silently=False)
             sent = True
     else:
@@ -102,6 +103,7 @@ def post_list(request, tag_slug=None, page=1):
     }
     return render(request, "app/blog.html", context)
 
+
 @login_required
 def add_post(request):
     context = {}
@@ -121,3 +123,17 @@ def add_post(request):
     }
     return render(request, "forms/addPostForm.html", context)
 
+
+def detail_post(request, pk):
+    post = get_object_or_404(Post, id=pk)
+    posts_tag = post.tags.values_list('id', flat=True)
+    similar_post = Post.objects.filter(tags__in=posts_tag)
+    similar_posts = similar_post.annotate(same_posts=Count('tags')).order_by("-same_posts")
+    for i in similar_posts:
+        print(i.discription, i.same_posts)
+    print(similar_posts)
+    context = {
+        'post': post,
+
+    }
+    return render(request, 'app/detail.html', context)

@@ -7,16 +7,18 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/output.css' %}">
 </head>
 <body>
-    <main>
-        <div class="container">
-            {% if tag %}
-                <h1 class="text-center font-bold mt-4 text-4xl">{{ tag }}'s posts</h1>
-                {% else %}
-                <h1 class="text-center font-bold mt-4 text-4xl">all posts</h1>
-            {% endif %}
-            <div class="flex justify-between gap-4">
-{#                start box#}
-                {% for post in posts %}
+<h1 class="text-center font-bold text-4xl">post</h1>
+<p>{{ post.discription }}</p>
+<p>This post created by {{ post.author }} in {{ post.created|date:'y/m/d' }}</p>
+<h2>Tags: {% for tag in post.tags.all %}
+<a href="{% url 'social:get_posts_tag' tag.slug %}"> {{ tag }}</a>
+{% endfor %}
+</h2>
+<br><br><br><br><br>
+<h1 class="text-center font-bold text-4xl">similar posts</h1>
+
+<div class="flex gap-4 justify-between">
+        {% for post in posts %}
                     <div class="border rounded-lg bg-blue-800 overflow-hidden w-[18rem] h-[23rem]">
                     <div class="w-full h-1/2 ">
                         <img src="" alt="" class="">
@@ -30,9 +32,8 @@
                     </div>
                 </div>
                 {% endfor %}
+</div>
 
-            </div>
-        </div>
-    </main>
+
 </body>
 </html>
