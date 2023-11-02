@@ -9,7 +9,11 @@
 <body>
     <main>
         <div class="container">
-            <h1 class="text-center font-bold mt-4 text-4xl">all posts</h1>
+            {% if tag %}
+                <h1 class="text-center font-bold mt-4 text-4xl">{{ tag }}'s posts</h1>
+                {% else %}
+                <h1 class="text-center font-bold mt-4 text-4xl">all posts</h1>
+            {% endif %}
             <div class="flex justify-between gap-4">
 {#                start box#}
                 {% for post in posts %}

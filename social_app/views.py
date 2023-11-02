@@ -83,9 +83,10 @@ def profile(request):
 def post_list(request, tag_slug=None, page=1):
     if tag_slug is not None:
         tag = get_object_or_404(Tag, slug=tag_slug)
-        posts = Post.objects.filter(tags=tag).order_by('-created')
+        posts = Post.objects.filter(tags__in=[tag]).order_by('-created')
     else:
         posts = Post.objects.all()
+        tag = None
 
     # paginator = Paginator(posts, 12)
     # page_number = page
@@ -97,5 +98,6 @@ def post_list(request, tag_slug=None, page=1):
     #     posts = paginator.page(1)
     context = {
         'posts': posts,
+        'tag': tag
     }
     return render(request, "app/blog.html", context)
