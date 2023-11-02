@@ -17,7 +17,7 @@ class Post(models.Model):
     """ post model for posts in my website """
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_post')
     # data fields
-    discription = models.CharField(max_length=1000)
+    discription = models.TextField(max_length=1000)
 
     # date
     created = models.DateTimeField(auto_now_add=True)
