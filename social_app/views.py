@@ -101,3 +101,23 @@ def post_list(request, tag_slug=None, page=1):
         'tag': tag
     }
     return render(request, "app/blog.html", context)
+
+@login_required
+def add_post(request):
+    context = {}
+    if request.method == "POST":
+        form = AddPostForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            post = form.save(commit=False)
+            post.author = request.user
+            form.save()
+            form.save_m2m()
+            return redirect("social:posts")
+    else:
+        form = AddPostForm()
+    context = {
+        "form": form,
+    }
+    return render(request, "forms/addPostForm.html", context)
+

@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import AuthenticationForm
 from django import forms
-from .models import User
+from .models import *
 
 
 class LoginForm(AuthenticationForm):
@@ -74,3 +74,15 @@ class TicketForm(forms.Form):
 
     message = forms.CharField(widget=forms.Textarea, required=True)
     title = forms.ChoiceField(choices=SUBJECT_CHOICES, required=True)
+
+
+class AddPostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ["discription", "tags"]
+        widgets = {
+            'discription': forms.Textarea
+        }
+
+
+
