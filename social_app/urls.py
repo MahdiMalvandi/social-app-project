@@ -13,6 +13,7 @@ urlpatterns = [
     path('posts/tag/<str:tag_slug>', views.post_list, name="get_posts_tag"),
     path('profile/', views.profile, name="profile"),
     path('posts/detail/<pk>/', views.detail_post, name="detail"),
+
     # login or log out
     path("login/", auth_views.LoginView.as_view(), name="login"),
     path('logout/', views.log_out, name="logout"),
@@ -23,5 +24,7 @@ urlpatterns = [
 
     # forms
     path('posts/create_post/', views.add_post, name="Add New Post"),
+    path('search/', views.search_post, name="search post"),
+    path('add-post/<pk>/', views.add_post, name="Add New Post")
 ]
 

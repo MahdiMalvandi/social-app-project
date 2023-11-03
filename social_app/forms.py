@@ -85,4 +85,10 @@ class AddPostForm(forms.ModelForm):
         }
 
 
+class SearchForm(forms.Form):
+    query = forms.CharField()
 
+
+class CommentForm(forms.Form):
+    author = forms.CharField(max_length=20)
+    text = forms.CharField(widget=forms.Textarea, required=True)

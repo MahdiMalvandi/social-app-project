@@ -51,6 +51,7 @@ def register(request):
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password'])
             user.save()
+            login(request, user)
             return redirect('social:home')
     else:
         form = UserRegisterForm()
@@ -127,13 +128,55 @@ def add_post(request):
 def detail_post(request, pk):
     post = get_object_or_404(Post, id=pk)
     posts_tag = post.tags.values_list('id', flat=True)
-    similar_post = Post.objects.filter(tags__in=posts_tag)
+    similar_post = Post.objects.filter(tags__in=posts_tag).exclude(id=pk)
     similar_posts = similar_post.annotate(same_posts=Count('tags')).order_by("-same_posts")
-    for i in similar_posts:
-        print(i.discription, i.same_posts)
-    print(similar_posts)
+    comments = post.comments.filter(active=True)
     context = {
         'post': post,
+        'similar_posts': similar_posts,
+        'comments': comments
 
     }
     return render(request, 'app/detail.html', context)
+
+
+def search_post(request):
+    """ Get query and search into posts by tags and discription"""
+    query = ""
+    results = []
+    if 'query' in request.GET:
+        form = SearchForm(data=request.GET)
+        if form.is_valid():
+            query = form.cleaned_data["query"]
+            results1 = Post.objects.annotate(similarity=TrigramSimilarity('discription', query)).filter(similarity__gt=0.1)
+
+            # get similar tags
+            similar_tags = Post.tags.annotate(similarity=TrigramSimilarity('name', query)).filter(similarity__gt=0.1)
+
+            # get similar posts by similar tags
+            similar_post = Post.objects.filter(tags__in=similar_tags)
+
+            # order similar posts by same tags
+            results2 = similar_post.annotate(same_posts=Count('tags')).order_by("-same_posts")
+            results = (results1 | results2).order_by("-similarity")
+            results = results.annotate(same_posts=Count('tags')).order_by("-same_posts")
+
+    context = {
+        'posts': results,
+        'query': query
+    }
+    return render(request, 'app/blog.html', context)
+
+
+@login_required()
+def add_post(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == "POST":
+        form = CommentForm(data=request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            Comments.objects.create(author=request.user, text=cd["text"], post_for=post)
+            return redirect('social:detail', post)
+    else:
+        form = CommentForm()
+    return redirect('social:detail', post)

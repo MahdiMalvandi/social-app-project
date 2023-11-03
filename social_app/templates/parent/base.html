@@ -47,7 +47,11 @@
             <a href="{% url 'social:contact_us' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Ticket</a>
             <a href="{% url 'social:posts' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Posts</a>
             <a href="{% url 'social:Add New Post' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Add post</a>
+            <form action="{% url 'social:search post' %}">
+                          <input type="search" placeholder="search" name="query">
+            </form>
           </div>
+
         </div>
       </div>
       <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">

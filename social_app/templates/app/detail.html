@@ -16,6 +16,10 @@
 </h2>
 <br><br><br><br><br>
 <h1 class="text-center font-bold text-4xl">similar posts</h1>
+{% for similar_post in similar_posts %}
+    <a href="{% url 'social:detail' similar_post.id %}">{{ similar_post|truncatewords:20 }}</a>
+    <br>
+{% endfor %}
 
 <div class="flex gap-4 justify-between">
         {% for post in posts %}
@@ -32,6 +36,17 @@
                     </div>
                 </div>
                 {% endfor %}
+<h2 class="">
+    {% for comment in comments %}
+        <div class="w-full p-4 rounded-lg border">
+        <p class="font-bold">{{ comment.author }}</p>
+            <br>
+        <p class="font-bold">{{ comment.created }}</p>
+            <br>
+        <p class="font-bold">{{ comment.text }}</p>
+        </div>
+    {% endfor %}
+</h2>
 </div>
 
 

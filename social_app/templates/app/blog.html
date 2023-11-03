@@ -11,6 +11,8 @@
         <div class="container">
             {% if tag %}
                 <h1 class="text-center font-bold mt-4 text-4xl">{{ tag }}'s posts</h1>
+                {% elif query %}
+                <h1 class="text-center font-bold mt-4 text-4xl">{{ query }}'s posts</h1>
                 {% else %}
                 <h1 class="text-center font-bold mt-4 text-4xl">all posts</h1>
             {% endif %}
