@@ -1,0 +1,10 @@
+<h1>Which post do you want to edit?</h1>
+<div class="flex gap-4 flex-wrap">
+    {% for post in posts %}
+        <div class="border rounded-lg p-4">
+            <p class="line-clamp-4">{{ post.discription }}</p>
+            <a href="{% url 'social:delete post' post.pk %}">Delete</a>
+            <a href="{% url 'social:edit post' post.pk %}">Edit</a>
+        </div>
+    {% endfor %}
+</div>

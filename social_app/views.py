@@ -11,6 +11,7 @@ from .models import Post, User
 from taggit.models import Tag
 from django.db.models import Count
 
+
 # Create your views here.
 
 
@@ -90,14 +91,14 @@ def post_list(request, tag_slug=None, page=1):
         posts = Post.objects.all()
         tag = None
 
-    # paginator = Paginator(posts, 12)
-    # page_number = page
-    # try:
-    #     posts = paginator.page(page_number)
-    # except EmptyPage:
-    #     posts = paginator.page(paginator.num_pages)
-    # except PageNotAnInteger:
-    #     posts = paginator.page(1)
+    paginator = Paginator(posts, 4)
+    page_number = page
+    try:
+        posts = paginator.page(page_number)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
     context = {
         'posts': posts,
         'tag': tag
@@ -107,15 +108,18 @@ def post_list(request, tag_slug=None, page=1):
 
 @login_required
 def add_post(request):
-    context = {}
     if request.method == "POST":
-        form = AddPostForm(request.POST)
+        form = AddPostForm(request.POST, request.FILES)
         if form.is_valid():
             cd = form.cleaned_data
             post = form.save(commit=False)
             post.author = request.user
+
             form.save()
             form.save_m2m()
+            PostsImage.objects.create(post=post, image=cd["image"])
+            print('object created')
+
             return redirect("social:posts")
     else:
         form = AddPostForm()
@@ -126,6 +130,12 @@ def add_post(request):
 
 
 def detail_post(request, pk):
+    """Get a post detail from pk
+
+    :parameter:
+        pk: int
+            id of the post you want to show
+    """
     post = get_object_or_404(Post, id=pk)
     posts_tag = post.tags.values_list('id', flat=True)
     similar_post = Post.objects.filter(tags__in=posts_tag).exclude(id=pk)
@@ -134,7 +144,8 @@ def detail_post(request, pk):
     context = {
         'post': post,
         'similar_posts': similar_posts,
-        'comments': comments
+        'comments': comments,
+        'is_login': request.user.is_authenticated
 
     }
     return render(request, 'app/detail.html', context)
@@ -148,7 +159,8 @@ def search_post(request):
         form = SearchForm(data=request.GET)
         if form.is_valid():
             query = form.cleaned_data["query"]
-            results1 = Post.objects.annotate(similarity=TrigramSimilarity('discription', query)).filter(similarity__gt=0.1)
+            results1 = Post.objects.annotate(similarity=TrigramSimilarity('discription', query)).filter(
+                similarity__gt=0.1)
 
             # get similar tags
             similar_tags = Post.tags.annotate(similarity=TrigramSimilarity('name', query)).filter(similarity__gt=0.1)
@@ -169,14 +181,69 @@ def search_post(request):
 
 
 @login_required()
-def add_post(request, pk):
+def add_comment(request, pk):
+    """Add a comment to the Post
+
+    :parameter :
+        pk : int
+            id of the post you want to add a comment to it
+    """
     post = get_object_or_404(Post, pk=pk)
     if request.method == "POST":
         form = CommentForm(data=request.POST)
         if form.is_valid():
+            print("data is  valid and saved")
             cd = form.cleaned_data
             Comments.objects.create(author=request.user, text=cd["text"], post_for=post)
-            return redirect('social:detail', post)
+            return redirect('social:detail', post.pk)
     else:
         form = CommentForm()
-    return redirect('social:detail', post)
+
+    return redirect('social:detail', pk)
+
+
+@login_required
+def delete_post(request, pk):
+    """Delete a post from pk
+
+    Parameters
+    ----------
+    pk : int
+        id of the post you want to delete
+    """
+    post = get_object_or_404(Post, pk=pk)
+    post.delete()
+    return redirect('social:change_posts')
+
+
+@login_required
+def change_posts(request):
+    """Return a HTML page"""
+    return render(request, 'app/edit-buttons.html', {'posts': Post.objects.filter(author=request.user)})
+
+
+@login_required
+def edit_post(request, pk):
+    """Edit a post from pk
+
+    Parameters
+    ----------
+    pk : int
+        id of the post you want to edit
+    """
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == 'POST':
+        form = AddPostForm(request.POST, instance=post)
+        if form.is_valid():
+            cd = form.cleaned_data
+            post = form.save(commit=False)
+            post.author = request.user
+            PostsImage.objects.create(image=cd['image'], post=post)
+            return redirect('social:change_posts')
+    else:
+        form = AddPostForm(instance=post)
+    context = {
+        'post': post,
+        'form': form
+    }
+    return render(request, 'forms/edit-posts.html', context)

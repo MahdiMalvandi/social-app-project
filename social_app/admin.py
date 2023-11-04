@@ -14,9 +14,17 @@ class CommentInline(admin.TabularInline):
     model = Comments
     extra = 0
 
+
+class ImagesInline(admin.TabularInline):
+    """Tabular Inline View for Comment"""
+
+    model = PostsImage
+    extra = 0
+
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = ["discription", "author"]
     inlines = [
-        CommentInline
+        CommentInline,
+        ImagesInline
     ]

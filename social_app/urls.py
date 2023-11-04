@@ -13,6 +13,9 @@ urlpatterns = [
     path('posts/tag/<str:tag_slug>', views.post_list, name="get_posts_tag"),
     path('profile/', views.profile, name="profile"),
     path('posts/detail/<pk>/', views.detail_post, name="detail"),
+    path('posts/page/<str:page>/', views.post_list, name="posts by page"),
+    path('posts/page/<str:tag_slug>/<str:page>/', views.post_list, name="posts by page and tag"),
+    path('posts/edit-and-delete/', views.change_posts, name="change_posts"),
 
     # login or log out
     path("login/", auth_views.LoginView.as_view(), name="login"),
@@ -25,6 +28,11 @@ urlpatterns = [
     # forms
     path('posts/create_post/', views.add_post, name="Add New Post"),
     path('search/', views.search_post, name="search post"),
-    path('add-post/<pk>/', views.add_post, name="Add New Post")
+    path('add-post/<pk>/', views.add_post, name="Add New Post"),
+    path('add-comments/<pk>/', views.add_comment, name="add comment"),
+
+    # Edit And Delete Posts
+    path('posts/edit/<pk>/', views.edit_post, name='edit post'),
+    path('posts/delete/<pk>/', views.delete_post, name='delete post'),
 ]
 

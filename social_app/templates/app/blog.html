@@ -21,7 +21,7 @@
                 {% for post in posts %}
                     <div class="border rounded-lg bg-blue-800 overflow-hidden w-[18rem] h-[23rem]">
                     <div class="w-full h-1/2 ">
-                        <img src="" alt="" class="">
+                        <img src="{{ post.images.first.image.url }}" alt="" class="w-full h-full">
                     </div>
                     <div class="w-full h-1/2 text-white p-2 flex flex-col justify-between">
                         <a href="{% url 'social:detail' post.id %}" class="line-clamp-4 ">{{ post.discription }}</a>
@@ -35,6 +35,7 @@
 
             </div>
         </div>
+     {% include "partials/paginator.html" with page=posts tag=tag.slug%}
     </main>
 </body>
 </html>

@@ -77,6 +77,7 @@ class TicketForm(forms.Form):
 
 
 class AddPostForm(forms.ModelForm):
+    image = forms.ImageField(label='post image', required=False)
     class Meta:
         model = Post
         fields = ["discription", "tags"]
@@ -90,5 +91,5 @@ class SearchForm(forms.Form):
 
 
 class CommentForm(forms.Form):
-    author = forms.CharField(max_length=20)
+    author = forms.CharField(max_length=20, required=False)
     text = forms.CharField(widget=forms.Textarea, required=True)

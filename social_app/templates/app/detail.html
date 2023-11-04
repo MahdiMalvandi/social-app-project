@@ -7,8 +7,14 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/output.css' %}">
 </head>
 <body>
-<h1 class="text-center font-bold text-4xl">post</h1>
+<main>
+    <div class="container">
+        <h1 class="text-center font-bold text-4xl">post</h1>
 <p>{{ post.discription }}</p>
+
+    {% for photo in post.images.all %}
+                            <img src="{{ photo.image.url }}" alt="" style="width: 20rem;">
+                        {% endfor %}
 <p>This post created by {{ post.author }} in {{ post.created|date:'y/m/d' }}</p>
 <h2>Tags: {% for tag in post.tags.all %}
 <a href="{% url 'social:get_posts_tag' tag.slug %}"> {{ tag }}</a>
@@ -25,7 +31,8 @@
         {% for post in posts %}
                     <div class="border rounded-lg bg-blue-800 overflow-hidden w-[18rem] h-[23rem]">
                     <div class="w-full h-1/2 ">
-                        <img src="" alt="" class="">
+
+
                     </div>
                     <div class="w-full h-1/2 text-white p-2 flex flex-col justify-between">
                         <a href="{% url 'social:detail' post.id %}" class="line-clamp-4 ">{{ post.discription }}</a>
@@ -36,19 +43,12 @@
                     </div>
                 </div>
                 {% endfor %}
-<h2 class="">
-    {% for comment in comments %}
-        <div class="w-full p-4 rounded-lg border">
-        <p class="font-bold">{{ comment.author }}</p>
-            <br>
-        <p class="font-bold">{{ comment.created }}</p>
-            <br>
-        <p class="font-bold">{{ comment.text }}</p>
-        </div>
-    {% endfor %}
-</h2>
-</div>
 
+
+</div>
+{% include 'forms/comments.html' %}
+    </div>
+</main>
 
 </body>
 </html>

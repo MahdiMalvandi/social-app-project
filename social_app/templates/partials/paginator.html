@@ -1,0 +1,142 @@
+<div class="pagination flex gap-4 mx-auto">
+{% if tag %}
+    {% if page.paginator.num_pages > 1 %}
+
+
+    {% if page.has_previous %}
+        <a href="{% url "social:posts by page and tag"  tag page.previous_page_number %}">
+            <div class="pagination_box p-3 rounded-lg bg-gray-400 text-white font-bold  flex items-center justify-center">
+                <p class="page_text">pervious</p>
+            </div>
+        </a>
+
+    {% if page.number > 3 %}
+    <a href="{% url "social:posts by page and tag" tag 1  %}">
+        <div class="pagination_box p-3 rounded-lg bg-gray-400 text-white font-bold flex items-center justify-center">
+            <p class="page_text">1</p>
+        </div>
+    </a>
+        {% if page.number > 4 %}
+
+            <div class="pagination_box p-3 rounded-lg bg-gray-400 text-white font-bold  flex items-center justify-center">
+                <p class="page_text">...</p>
+            </div>
+
+        {% endif %}
+    {% endif %}
+    {% endif %}
+
+    {% for num in page.paginator.page_range %}
+    {% if page.number == num %}
+        <a href="{% url "social:posts by page and tag" tag num  %}">
+                <div class="pagination_box p-3 rounded-lg bg-gray-400 text-white font-bold flex items-center justify-center">
+                    <p class="page_text">{{num}}</p>
+                </div>
+            </a>
+    {% elif num > page.number|add:'-3' and num < page.number|add:'3' %}
+        <a href="{% url "social:posts by page and tag" tag num  %}">
+                <div class="pagination_box p-3 rounded-lg bg-gray-400 text-white font-bold  flex items-center justify-center">
+                    <p class="page_text">{{num}}</p>
+                </div>
+            </a>
+    {% endif %}
+    {% endfor %}
+
+    {% if page.has_next %}
+    {% if page.number < page.paginator.num_pages|add:'-3' %}
+    <div class="pagination_box p-3 rounded-lg bg-gray-400 text-white font-bold  flex items-center justify-center">
+        <p class="page_text">...</p>
+    </div>
+        <a href="{% url "social:posts by page and tag" tag page.paginator.num_pages  %}">
+            <div class="pagination_box p-3 rounded-lg bg-gray-400 text-white font-bold flex items-center justify-center">
+                <p class="page_text">{{ page.paginator.num_pages }}</p>
+            </div>
+        </a>
+
+    {% elif page.number < page.paginator.num_pages|add:'-2' %}
+    <a href="{% url "social:posts by page and tag" tag page.paginator.num_pages  %}">
+        <div class="pagination_box p-3 rounded-lg bg-gray-400 text-white font-bold  flex items-center justify-center">
+            <p class="page_text">{{ page.paginator.num_pages }}</p>
+        </div>
+    </a>
+    {% endif %}
+
+    <a href="{% url "social:posts by page and tag" tag page.next_page_number  %}">
+        <div class="pagination_box p-3 rounded-lg bg-gray-400 text-white font-bold  flex items-center justify-center">
+            <p class="page_text">Next</p>
+        </div>
+    </a>
+    {% endif %}
+    {% endif %}
+{% else %}
+    {% if page.paginator.num_pages > 1 %}
+
+
+    {% if page.has_previous %}
+        <a href="{% url "social:posts by page" page.previous_page_number %}">
+            <div class="pagination_box p-3 rounded-lg bg-gray-400 text-white font-bold  flex items-center justify-center">
+                <p class="page_text">pervious</p>
+            </div>
+        </a>
+
+    {% if page.number > 3 %}
+    <a href="{% url "social:posts by page" 1 %}">
+        <div class="pagination_box p-3 rounded-lg bg-gray-400 text-white font-bold  flex items-center justify-center">
+            <p class="page_text">1</p>
+        </div>
+    </a>
+        {% if page.number > 4 %}
+
+            <div class="pagination_box p-3 rounded-lg bg-gray-400 text-white font-bold  flex items-center justify-center">
+                <p class="page_text">...</p>
+            </div>
+
+        {% endif %}
+    {% endif %}
+    {% endif %}
+
+    {% for num in page.paginator.page_range %}
+    {% if page.number == num %}
+        <a href="{% url "social:posts by page" num %}">
+                <div class="pagination_box p-3 rounded-lg bg-gray-400 text-white font-bold  flex items-center justify-center">
+                    <p class="page_text">{{num}}</p>
+                </div>
+            </a>
+    {% elif num > page.number|add:'-3' and num < page.number|add:'3' %}
+        <a href="{% url "social:posts by page" num %}">
+                <div class="pagination_box p-3 rounded-lg bg-gray-400 text-white font-bold  flex items-center justify-center">
+                    <p class="page_text">{{num}}</p>
+                </div>
+            </a>
+    {% endif %}
+    {% endfor %}
+
+    {% if page.has_next %}
+    {% if page.number < page.paginator.num_pages|add:'-3' %}
+    <div class="pagination_box">
+        <p class="page_text">...</p>
+    </div>
+        <a href="{% url "social:posts by page" page.paginator.num_pages %}">
+            <div class="pagination_box p-3 rounded-lg bg-gray-400 text-white font-bold flex items-center justify-center">
+                <p class="page_text">{{ page.paginator.num_pages }}</p>
+            </div>
+        </a>
+
+    {% elif page.number < page.paginator.num_pages|add:'-2' %}
+    <a href="{% url "social:posts by page" page.paginator.num_pages %}">
+        <div class="pagination_box p-3 rounded-lg bg-gray-400 text-white font-bold  flex items-center justify-center">
+            <p class="page_text">{{ page.paginator.num_pages }}</p>
+        </div>
+    </a>
+    {% endif %}
+
+    <a href="{% url "social:posts by page" page.next_page_number %}">
+        <div class="pagination_box p-3 rounded-lg bg-gray-400 text-white font-bold  flex items-center justify-center">
+            <p class="page_text">Next</p>
+        </div>
+    </a>
+    {% endif %}
+    {% endif %}
+
+{% endif %}
+</div>

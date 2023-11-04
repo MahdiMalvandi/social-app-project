@@ -1,0 +1,31 @@
+<div>
+    <h2 class="mt-10 text-center font-bold text-4xl">Comments</h2>
+    <form method="post" class="border rounded-lg w-1/3 flex flex-col gap-4 items-center p-2 mx-auto mt-2" action="{% url 'social:add comment' post.pk %}">
+        <h3>Add Comment</h3>
+        {% csrf_token %}
+
+    <textarea name="text" class="p-2 w-full border-0" onresize="event.preventDefault()"></textarea>
+
+        {% if is_login %}
+            <input type="submit" value="send" class="p-3 w-20 bg-gray-800 text-white rounded-lg">
+            {% else %}
+            <input type="button" value="First login" class="p-3 w-20 bg-gray-800 text-white rounded-lg">
+        {% endif %}
+    </form>
+    {% if comments %}
+    <div class="grid grid-cols-1 gap-4">
+                {% for comment in comments %}
+        <div class="w-full p-4 rounded-lg border">
+        <p class="font-bold">{{ comment.author }}</p>
+            <br>
+        <p class="font-bold">{{ comment.created }}</p>
+            <br>
+        <p class="font-bold">{{ comment.text }}</p>
+        </div>
+    {% endfor %}
+    </div>
+        {% else %}
+<h2 class="mt-10 text-center font-bold text-3xl">There is not any comments</h2>
+
+    {% endif %}
+</div>
