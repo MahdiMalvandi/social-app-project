@@ -20,6 +20,14 @@
 <a href="{% url 'social:get_posts_tag' tag.slug %}"> {{ tag }}</a>
 {% endfor %}
 </h2>
+    <div class="post  " data-post_id="{{ post.id }}">
+        <button class="like-btn border rounded-lg p-2">{% if request.user in post.likes.all %}
+            unlike
+            {% else %}
+            like
+        {% endif %} </button>
+    <p class="likes-count">{{ post.likes.count }}</p>
+    </div>
 <br><br><br><br><br>
 <h1 class="text-center font-bold text-4xl">similar posts</h1>
 {% for similar_post in similar_posts %}
@@ -49,6 +57,28 @@
 {% include 'forms/comments.html' %}
     </div>
 </main>
+<script type="text/javascript">
 
+    {## change this code to vanilla javascript#}
+{#$(document).ready(function() {#}
+{#        $('.like-button').click(function() {#}
+{#			var post_id = $(this).closest('.post').data('post-id');#}
+{#            var  button = $(this);#}
+{##}
+{#            $.ajax({#}
+{#                type: 'POST',#}
+{#                url: '{% url 'social:like_post' %}',#}
+{#                data: {'post_id': post_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},#}
+{#                success: function(data) {#}
+{#                    if (data.liked){#}
+{#                        button.text('UnLike');#}
+{#                    } else {#}
+{#                        button.text('Like');#}
+{#                    }#}
+{#                    $('.likes-count').text(data.likes_count);#}
+{#                },#}
+{#            });#}
+{#        });#}
+</script>
 </body>
 </html>

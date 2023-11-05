@@ -34,5 +34,8 @@ urlpatterns = [
     # Edit And Delete Posts
     path('posts/edit/<pk>/', views.edit_post, name='edit post'),
     path('posts/delete/<pk>/', views.delete_post, name='delete post'),
+
+    # like post
+    path('like-post/', views.like_post, name='like post'),
 ]
 

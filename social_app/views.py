@@ -1,12 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.postgres.search import TrigramSimilarity
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import random
 from django.contrib.auth import logout, login
 from .forms import *
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from django.views.decorators.http import require_POST
 from .models import Post, User
 from taggit.models import Tag
 from django.db.models import Count
@@ -151,7 +152,7 @@ def detail_post(request, pk):
 
 
 def search_post(request):
-    """ Get query and search into posts by tags and discription"""
+    """ Get query and search into posts by tags and discription """
     query = ""
     results = []
     if 'query' in request.GET:
@@ -247,3 +248,44 @@ def edit_post(request, pk):
         'form': form
     }
     return render(request, 'forms/edit-posts.html', context)
+
+
+@login_required
+@require_POST
+def like_post(request):
+    post_id = request.POST.get('post_id')
+    if post_id is not None:
+        post = get_object_or_404(Post, id=post_id)
+        user = request.user
+
+        if user in post.likes.all():
+            # unlike
+            liked = False
+            post.likes.remove(user)
+        else:
+            # like
+            liked = True
+            post.likes.add(user)
+
+        post_likes_count = post.likes.count()
+
+        response_data = {
+            'liked': liked,
+            'likes_count': post_likes_count
+        }
+    else:
+        response_data = {
+            'error': 'Invalid post_id'
+        }
+    return JsonResponse(response_data)
+
+
+
+
+
+
+
+
+
+
+
