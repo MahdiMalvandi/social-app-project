@@ -78,12 +78,26 @@ class TicketForm(forms.Form):
 
 class AddPostForm(forms.ModelForm):
     image = forms.ImageField(label='post image', required=False)
+    add_or_not = forms.BooleanField(required=False, initial=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.instance.pk:
+            del self.fields['add_or_not']
+
     class Meta:
         model = Post
         fields = ["discription", "tags"]
         widgets = {
             'discription': forms.Textarea
         }
+
+    def clean_add(self):
+        cd = self.cleaned_data
+        if not cd['add']:
+            same_images = PostsImage.objects.filter(post__discription=cd["discription"]).exclude(image=cd["image"])
+            for i in same_images:
+                i.delete()
 
 
 class SearchForm(forms.Form):

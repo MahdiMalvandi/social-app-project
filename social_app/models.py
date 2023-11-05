@@ -1,3 +1,5 @@
+import os
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from taggit.managers import TaggableManager
@@ -39,6 +41,11 @@ class Post(models.Model):
         """ str for class """
         return self.discription
 
+    def delete(self, *args, **kwargs):
+        for image in self.images.all():
+            storage, path = image.image.storage, image.image.path
+            storage.delete(path)
+        super().delete(*args, **kwargs)
 
 
 
@@ -63,3 +70,7 @@ class PostsImage(models.Model):
     image = models.ImageField(upload_to='posts-image/')
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='images')
 
+    def delete(self, *args, **kwargs):
+        storage, path = self.image.storage, self.image.path
+        os.remove(path)
+        super().delete(*args, **kwargs)

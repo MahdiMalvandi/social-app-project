@@ -118,7 +118,6 @@ def add_post(request):
             form.save()
             form.save_m2m()
             PostsImage.objects.create(post=post, image=cd["image"])
-            print('object created')
 
             return redirect("social:posts")
     else:
@@ -192,7 +191,6 @@ def add_comment(request, pk):
     if request.method == "POST":
         form = CommentForm(data=request.POST)
         if form.is_valid():
-            print("data is  valid and saved")
             cd = form.cleaned_data
             Comments.objects.create(author=request.user, text=cd["text"], post_for=post)
             return redirect('social:detail', post.pk)
@@ -233,12 +231,14 @@ def edit_post(request, pk):
     """
     post = get_object_or_404(Post, pk=pk)
     if request.method == 'POST':
-        form = AddPostForm(request.POST, instance=post)
+        form = AddPostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
             cd = form.cleaned_data
             post = form.save(commit=False)
             post.author = request.user
+            post.save()
             PostsImage.objects.create(image=cd['image'], post=post)
+
             return redirect('social:change_posts')
     else:
         form = AddPostForm(instance=post)
