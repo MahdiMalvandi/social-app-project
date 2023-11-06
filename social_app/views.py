@@ -100,6 +100,8 @@ def post_list(request, tag_slug=None, page=1):
         posts = paginator.page(paginator.num_pages)
     except PageNotAnInteger:
         posts = paginator.page(1)
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return render(request, 'partials/list-ajax.html', {'posts': posts})
     context = {
         'posts': posts,
         'tag': tag
@@ -254,6 +256,8 @@ def edit_post(request, pk):
 @require_POST
 def like_post(request):
     post_id = request.POST.get('post_id')
+    print(post_id)
+    print(request.POST)
     if post_id is not None:
         post = get_object_or_404(Post, id=post_id)
         user = request.user
@@ -278,8 +282,6 @@ def like_post(request):
             'error': 'Invalid post_id'
         }
     return JsonResponse(response_data)
-
-
 
 
 

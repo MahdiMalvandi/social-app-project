@@ -37,5 +37,6 @@ urlpatterns = [
 
     # like post
     path('like-post/', views.like_post, name='like post'),
+
 ]
 

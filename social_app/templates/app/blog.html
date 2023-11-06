@@ -16,7 +16,7 @@
                 {% else %}
                 <h1 class="text-center font-bold mt-4 text-4xl">all posts</h1>
             {% endif %}
-            <div class="flex justify-between gap-4">
+            <div class="flex justify-between gap-4" id="posts">
 {#                start box#}
                 {% for post in posts %}
                     <div class="border rounded-lg bg-blue-800 overflow-hidden w-[18rem] h-[23rem]">
@@ -33,9 +33,27 @@
                 </div>
                 {% endfor %}
 
+<button class="load-more">load more</button>
             </div>
         </div>
-     {% include "partials/paginator.html" with page=posts tag=tag.slug%}
+{#     {% include "partials/paginator.html" with page=posts tag=tag.slug%}#}
     </main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+ $(document).ready(function(){
+        var page = 2;
+        $('.load-more').click(function(){
+            $.ajax({
+                type : 'GET',
+                url : "{% if tag %}{% url 'social:posts by page and tag' tag.slug  %}{% else %}{% url 'social:posts by page' page=page %}{% endif %}",
+                dataType : 'html',
+                success : function(data){
+                    $('#posts').append(data);
+                    page += 1;
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>
