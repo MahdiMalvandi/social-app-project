@@ -16,7 +16,7 @@
                 {% else %}
                 <h1 class="text-center font-bold mt-4 text-4xl">all posts</h1>
             {% endif %}
-            <div class="flex justify-between gap-4" id="posts">
+            <div class="flex justify-between gap-4 flex-wrap" id="posts">
 {#                start box#}
                 {% for post in posts %}
                     <div class="border rounded-lg bg-blue-800 overflow-hidden w-[18rem] h-[23rem]">
@@ -33,8 +33,9 @@
                 </div>
                 {% endfor %}
 
-<button class="load-more">load more</button>
+
             </div>
+            <button class="load-more border ">load more</button>
         </div>
 {#     {% include "partials/paginator.html" with page=posts tag=tag.slug%}#}
     </main>
@@ -45,7 +46,7 @@
         $('.load-more').click(function(){
             $.ajax({
                 type : 'GET',
-                url : "{% if tag %}{% url 'social:posts by page and tag' tag.slug  %}{% else %}{% url 'social:posts by page' page=page %}{% endif %}",
+                url : `{% if tag %}/posts/page/{{ tag.slug }}/${page}/{% else %}/posts/page/${page}/{% endif %}`,
                 dataType : 'html',
                 success : function(data){
                     $('#posts').append(data);

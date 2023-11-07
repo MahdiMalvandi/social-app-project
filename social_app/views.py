@@ -92,7 +92,7 @@ def post_list(request, tag_slug=None, page=1):
         posts = Post.objects.all()
         tag = None
 
-    paginator = Paginator(posts, 4)
+    paginator = Paginator(posts, 1)
     page_number = page
     try:
         posts = paginator.page(page_number)
