@@ -26,6 +26,11 @@
             {% else %}
             like
         {% endif %} </button>
+     <button class="save-btn border rounded-lg p-2">{% if request.user in post.saved.all %}
+            unSave
+            {% else %}
+            Save
+        {% endif %} </button>
     <p class="likes-count">{{ post.likes.count }}</p>
     </div>
 <br><br><br><br><br>
@@ -76,6 +81,23 @@
                         button.text('Like');
                     }
                     $('.likes-count').text(data.likes_count + " likes");
+                },
+            });
+        });
+        $('.save-btn').click(function() {
+			var post_id = $(this).closest('.post').data('post-id');
+            var  button = $(this);
+
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'social:save post' %}',
+                data: {'post_id': post_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function(data) {
+                    if (data.saved){
+                        button.text('UnSave');
+                    } else {
+                        button.text('Save');
+                    }
                 },
             });
         });

@@ -22,7 +22,11 @@ def log_out(request):
 
 
 def homepage(request):
-    return render(request, 'parent/base.html', {"user": request.user})
+    context = {
+        "user": request.user,
+        "saved_post": request.user.post_saved.all()
+    }
+    return render(request, 'parent/base.html', context)
 
 
 def ticket(request):
@@ -97,11 +101,12 @@ def post_list(request, tag_slug=None, page=1):
     try:
         posts = paginator.page(page_number)
     except EmptyPage:
-        posts = paginator.page(paginator.num_pages)
+        posts = []
     except PageNotAnInteger:
         posts = paginator.page(1)
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        return render(request, 'partials/list-ajax.html', {'posts': posts})
+        last = posts.has_next()
+        return render(request, 'partials/list-ajax.html', {'posts': posts, 'last': last})
     context = {
         'posts': posts,
         'tag': tag
@@ -256,8 +261,6 @@ def edit_post(request, pk):
 @require_POST
 def like_post(request):
     post_id = request.POST.get('post_id')
-    print(post_id)
-    print(request.POST)
     if post_id is not None:
         post = get_object_or_404(Post, id=post_id)
         user = request.user
@@ -285,8 +288,29 @@ def like_post(request):
 
 
 
-
-
+@login_required
+@require_POST
+def save_post(request):
+    post_id = request.POST.get('post_id')
+    if post_id is not None:
+        post = get_object_or_404(Post,id=post_id)
+        user = request.user
+        if user in post.saved.all():
+            # unsaved
+            post.saved.remove(user)
+            saved = False
+        else:
+            # saved
+            post.saved.add(user)
+            saved = True
+        response_data = {
+            'saved': saved
+        }
+    else:
+        response_data = {
+            'error': 'Invalid post_id'
+        }
+    return JsonResponse(response_data)
 
 
 

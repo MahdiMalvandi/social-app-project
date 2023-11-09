@@ -38,5 +38,8 @@ urlpatterns = [
     # like post
     path('like-post/', views.like_post, name='like post'),
 
+    # save and un save
+    path('posts/save/', views.save_post, name='save post')
+
 ]
 

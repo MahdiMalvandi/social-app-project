@@ -14,6 +14,7 @@ class User(AbstractUser):
     photo = models.ImageField(upload_to="users-photo/", blank=True, null=True)
     job = models.CharField(max_length=500, blank=True, null=True)
     phone = models.CharField(max_length=11, blank=True, null=True)
+    following = models.ManyToManyField('self', through="Following", related_name='followers', symmetrical=False)
 
 
 class Post(models.Model):
@@ -26,6 +27,7 @@ class Post(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     likes = models.ManyToManyField(User, related_name="post_likes", blank=True)
+    saved = models.ManyToManyField(User, related_name="post_saved", blank=True)
 
     tags = TaggableManager()
 
@@ -75,3 +77,16 @@ class PostsImage(models.Model):
         storage, path = self.image.storage, self.image.path
         os.remove(path)
         super().delete(*args, **kwargs)
+
+
+class Following(models.Model):
+    user_from = models.ForeignKey(User, on_delete=models.CASCADE, related_name='rel_to_set')
+    user_to = models.ForeignKey(User, on_delete=models.CASCADE, related_name='rel_from_set')
+    created_at = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        indexes = [ models.Index(fields=['-created_at'])]
+        ordering = ('-created_at',)
+
+    def __str__(self):
+        return f'{self.user_from} follows {self.user_to}'
+
