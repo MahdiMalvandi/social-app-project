@@ -39,7 +39,13 @@ urlpatterns = [
     path('like-post/', views.like_post, name='like post'),
 
     # save and un save
-    path('posts/save/', views.save_post, name='save post')
+    path('posts/save/', views.save_post, name='save post'),
 
+    # get users ot user detail
+    path('users/', views.get_all_users, name='get all users'),
+    path('users/<username>', views.get_user_detail_by_username, name="get user detail by username"),
+
+     # follow
+    path('follow/', views.follow_user, name='follow user'),
 ]
 

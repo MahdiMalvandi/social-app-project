@@ -8,7 +8,7 @@ from .forms import *
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.views.decorators.http import require_POST
-from .models import Post, User
+from .models import Post, User, Following
 from taggit.models import Tag
 from django.db.models import Count
 
@@ -287,13 +287,12 @@ def like_post(request):
     return JsonResponse(response_data)
 
 
-
 @login_required
 @require_POST
 def save_post(request):
     post_id = request.POST.get('post_id')
     if post_id is not None:
-        post = get_object_or_404(Post,id=post_id)
+        post = get_object_or_404(Post, id=post_id)
         user = request.user
         if user in post.saved.all():
             # unsaved
@@ -313,5 +312,41 @@ def save_post(request):
     return JsonResponse(response_data)
 
 
+@login_required()
+def get_all_users(request):
+    all_users = User.objects.filter(is_active=True)
+    return render(request, 'app/users-list.html', {'users': all_users})
 
 
+@login_required()
+def get_user_detail_by_username(request, username):
+    user = get_object_or_404(User, is_active=True, username=username)
+    return render(request, 'app/users-detail.html', {'user': user})
+
+
+@login_required()
+@require_POST
+def follow_user(request):
+    user_id = request.POST.get('user_id')
+    if user_id is not None:
+        user = get_object_or_404(User, is_active=True, id=user_id)
+        try:
+            if request.user in user.followers.all():
+                # un follow
+                Following.objects.filter(user_from=request.user, user_to=user).delete()
+                follow = False
+            else:
+                # follow
+                Following.objects.get_or_create(user_from=request.user, user_to=user)
+                follow = True
+
+            context = {
+                'follow': follow,
+                'total_followers': user.followers.count(),
+                'total_following': user.following.count(),
+            }
+            return JsonResponse(context)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'the user does not exist'})
+    else:
+        return JsonResponse({'error': "Invalid request"})

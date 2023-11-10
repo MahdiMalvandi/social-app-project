@@ -16,6 +16,8 @@ class User(AbstractUser):
     phone = models.CharField(max_length=11, blank=True, null=True)
     following = models.ManyToManyField('self', through="Following", related_name='followers', symmetrical=False)
 
+    def get_absolute_url(self):
+        return reverse('social:get user detail by username', args=[self.username])
 
 class Post(models.Model):
     """ post model for posts in my website """
