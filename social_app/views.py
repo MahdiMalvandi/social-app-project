@@ -262,7 +262,7 @@ def edit_post(request, pk):
 def like_post(request):
     post_id = request.POST.get('post_id')
     if post_id is not None:
-        post = get_object_or_404(Post, id=post_id)
+        post = Post.objects.select_related('author').get(id=post_id)
         user = request.user
 
         if user in post.likes.all():
