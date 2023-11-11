@@ -28,3 +28,7 @@ class PostAdmin(admin.ModelAdmin):
         CommentInline,
         ImagesInline
     ]
+
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ["first_name", "last_name", "username"]

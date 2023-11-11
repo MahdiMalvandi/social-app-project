@@ -30,6 +30,7 @@ class Post(models.Model):
     updated = models.DateTimeField(auto_now=True)
     likes = models.ManyToManyField(User, related_name="post_likes", blank=True)
     saved = models.ManyToManyField(User, related_name="post_saved", blank=True)
+    total_likes = models.PositiveIntegerField(default=0)
 
     tags = TaggableManager()
 
@@ -39,7 +40,8 @@ class Post(models.Model):
         """ ORDERING """
         ordering = ["-created"]
         indexes = [
-            models.Index(fields=["-created"])
+            models.Index(fields=["-created"]),
+            models.Index(fields=["-total_likes"]),
         ]
 
     def __str__(self):

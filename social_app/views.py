@@ -57,7 +57,7 @@ def register(request):
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password'])
             user.save()
-            login(request, user)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             return redirect('social:home')
     else:
         form = UserRegisterForm()
@@ -91,7 +91,7 @@ def profile(request):
 def post_list(request, tag_slug=None, page=1):
     if tag_slug is not None:
         tag = get_object_or_404(Tag, slug=tag_slug)
-        posts = Post.objects.filter(tags__in=[tag]).order_by('-created')
+        posts = Post.objects.filter(tags__in=[tag]).order_by('-total_likes')
     else:
         posts = Post.objects.all()
         tag = None

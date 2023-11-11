@@ -144,8 +144,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = "social_app.User"
 AUTHENTICATION_BACKENDS = [
+    'social_app.authentication.EmailAuthBackEnd',
     'django.contrib.auth.backends.ModelBackend',
-    'social_app.authentication.EmailAuthBackEnd'
+
 ]
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'mahdimalvandi6@gmail.com'
