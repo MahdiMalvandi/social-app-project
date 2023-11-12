@@ -67,7 +67,6 @@ def register(request):
 @login_required()
 def ProfileEdit(request):
     if request.method == "POST":
-        print(request.POST)
         user_form = EditUserForm(request.POST, instance=request.user, files=request.FILES)
         if user_form.is_valid():
             user_form.save()
