@@ -11,6 +11,7 @@ from django.views.decorators.http import require_POST
 from .models import Post, User, Following
 from taggit.models import Tag
 from django.db.models import Count
+from django.contrib import messages
 
 
 # Create your views here.
@@ -200,6 +201,7 @@ def add_comment(request, pk):
         if form.is_valid():
             cd = form.cleaned_data
             Comments.objects.create(author=request.user, text=cd["text"], post_for=post)
+            messages.success(request,'your message has been added')
             return redirect('social:detail', post.pk)
     else:
         form = CommentForm()
