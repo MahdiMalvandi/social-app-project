@@ -47,5 +47,8 @@ urlpatterns = [
 
      # follow
     path('follow/', views.follow_user, name='follow user'),
+
+    # apis
+    path('apis/posts/', views.posts_api, name='posts')
 ]
 
