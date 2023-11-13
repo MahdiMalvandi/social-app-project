@@ -31,6 +31,11 @@ SECRET_KEY = 'django-insecure-pc5nzf96@g&+2rs6ydz7#!0(xo*#!33r*5!2m6xb4t!mbqytq(
 
 DEBUG = False
 ALLOWED_HOSTS = ['127.0.0.1']
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,10 +45,11 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    "django.contrib.staticfiles",
     'django.contrib.postgres',
     'taggit',
     'easy_thumbnails',
+"debug_toolbar",
 ]
 
 MIDDLEWARE = [
@@ -54,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'djangoProject.urls'

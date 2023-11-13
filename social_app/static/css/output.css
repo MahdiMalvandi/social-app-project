@@ -762,6 +762,10 @@ video {
   display: inline-flex;
 }
 
+.table {
+  display: table;
+}
+
 .flow-root {
   display: flow-root;
 }
@@ -822,14 +826,6 @@ video {
   height: 100%;
 }
 
-.h-\[20rem\] {
-  height: 20rem;
-}
-
-.h-\[21rem\] {
-  height: 21rem;
-}
-
 .min-h-full {
   min-height: 100%;
 }
@@ -888,10 +884,6 @@ video {
 
 .w-screen {
   width: 100vw;
-}
-
-.w-\[20rem\] {
-  width: 20rem;
 }
 
 .max-w-2xl {

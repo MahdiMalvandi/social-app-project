@@ -27,7 +27,7 @@ def homepage(request):
         "user": request.user,
         "saved_post": request.user.post_saved.all()
     }
-    return render(request, 'parent/base.html', context)
+    return render(request, 'parent/index.html', context)
 
 
 def ticket(request):
