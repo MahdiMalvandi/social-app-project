@@ -50,6 +50,6 @@ urlpatterns = [
      # follow
     path('follow/', views.follow_user, name='follow user'),
 
-    path('api/users/', views.all_users_api)
+    path('api/posts/', views.all_posts_api)
 ]
 

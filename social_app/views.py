@@ -17,7 +17,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.decorators import api_view
-from .serializers import UserSerializer
+from .serializers import *
 
 # Create your views here.
 
@@ -358,8 +358,19 @@ def follow_user(request):
         return JsonResponse({'error': "Invalid request"})
 
 
-@api_view(['GET'])
-def all_users_api(request: Request):
-    all_users = User.objects.prefetch_related().all()
-    users = UserSerializer(instance=all_users, many=True)
-    return Response(users.data, status.HTTP_200_OK)
+@api_view(['GET', 'POST'])
+def all_posts_api(request: Request):
+    if request.method == 'GET':
+        posts_query_set = Post.objects.prefetch_related().all()
+        posts = PostSerializer(instance=posts_query_set, many=True)
+        return Response(posts.data, status.HTTP_200_OK)
+    elif request.method == 'POST':
+        post = PostAddSerializer(data=request.data)
+
+        print(post)
+        if post.is_valid():
+            post.save()
+            return Response({"message": "add post successfully"}, status.HTTP_201_CREATED)
+    print(f'request method == {request.method}')
+    return Response(None, status.HTTP_400_BAD_REQUEST)
+
