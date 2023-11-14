@@ -13,10 +13,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -25,17 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-pc5nzf96@g&+2rs6ydz7#!0(xo*#!33r*5!2m6xb4t!mbqytq('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-#
-# ALLOWED_HOSTS = []
+DEBUG = True
 
-DEBUG = False
-ALLOWED_HOSTS = ['127.0.0.1']
-INTERNAL_IPS = [
-    # ...
-    "127.0.0.1",
-    # ...
-]
+ALLOWED_HOSTS = []
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -49,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     'taggit',
     'easy_thumbnails',
-"debug_toolbar",
+    "debug_toolbar",
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -83,7 +76,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'djangoProject.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

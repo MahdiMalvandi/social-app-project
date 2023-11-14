@@ -13,6 +13,11 @@ from taggit.models import Tag
 from django.db.models import Count
 from django.contrib import messages
 
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.request import Request
+from rest_framework.decorators import api_view
+from .serializers import UserSerializer
 
 # Create your views here.
 
@@ -351,3 +356,10 @@ def follow_user(request):
             return JsonResponse({'error': 'the user does not exist'})
     else:
         return JsonResponse({'error': "Invalid request"})
+
+
+@api_view(['GET'])
+def all_users_api(request: Request):
+    all_users = User.objects.prefetch_related().all()
+    users = UserSerializer(instance=all_users, many=True)
+    return Response(users.data, status.HTTP_200_OK)

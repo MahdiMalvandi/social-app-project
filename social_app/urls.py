@@ -1,9 +1,11 @@
-from django.urls import path
+from django.urls import path,include
 from django.contrib.auth import views as auth_views
 from . import views
 
 
 app_name = "social"
+
+
 
 urlpatterns = [
     # pages
@@ -47,5 +49,7 @@ urlpatterns = [
 
      # follow
     path('follow/', views.follow_user, name='follow user'),
+
+    path('api/users/', views.all_users_api)
 ]
 
