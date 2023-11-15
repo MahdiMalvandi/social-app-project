@@ -36,6 +36,7 @@ def homepage(request):
 
 
 def ticket(request):
+    answers = Ticket.objects.filter(author=request.user)
     sent = False
     if request.method == "POST":
         form = TicketForm(request.POST)
@@ -43,16 +44,22 @@ def ticket(request):
             cd = form.cleaned_data
             user = request.user
             email_message = f'You Have a message from {user.first_name} {user.last_name} ' \
-                            f'message title is {cd["title"]}' \
+                            f'message title is {cd["subject"]}' \
                             f'message is:' \
-                            f' {cd["message"]}'
-            send_mail(cd['title'], email_message, 'mahdimalvandi6@gmail.com',
+                            f' {cd["body"]}'
+            Ticket.objects.create(author=user, body=cd["body"], subject=cd["subject"])
+            send_mail(cd['subject'], email_message, 'mahdimalvandi6@gmail.com',
                       ['zohrezahedi1981@gmail.com', 'mahdimll1386@gmail.com'],
                       fail_silently=False)
             sent = True
+
     else:
         form = TicketForm()
-    return render(request, "app/contactus.html", {"form": form, 'sent': sent})
+    context = {"form": form, 'sent': sent,
+               "answers":answers
+               }
+
+    return render(request, "app/contactus.html", context)
 
 
 def register(request):
@@ -367,7 +374,6 @@ def all_posts_api(request: Request):
     elif request.method == 'POST':
         post = PostAddSerializer(data=request.data)
 
-        print(post)
         if post.is_valid():
             post.save()
             return Response({"message": "add post successfully"}, status.HTTP_201_CREATED)

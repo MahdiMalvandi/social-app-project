@@ -32,3 +32,7 @@ class PostAdmin(admin.ModelAdmin):
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ["first_name", "last_name", "username"]
+
+@admin.register(Ticket)
+class TicketAdmin(admin.ModelAdmin):
+    list_display = ["author", "body", "subject", "answer"]

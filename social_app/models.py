@@ -54,6 +54,8 @@ class Post(models.Model):
             storage.delete(path)
         super().delete(*args, **kwargs)
 
+    def get_absolute_url(self, *args, **kwargs):
+        return reverse('social:detail', args=[self.id])
 
 
 
@@ -94,3 +96,17 @@ class Following(models.Model):
     def __str__(self):
         return f'{self.user_from} follows {self.user_to}'
 
+
+class Ticket(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_tickets')
+    body = models.TextField(max_length=1000)
+    subjects = [
+        ("BG", "bug"),
+        ("PR", "proposal"),
+        ("CR", "critics"),
+    ]
+    subject = models.CharField(max_length=2, choices=subjects, default='BG')
+    answer = models.TextField(max_length=1000)
+
+    def __str__(self):
+        return f'{self.subject} - {self.body}'

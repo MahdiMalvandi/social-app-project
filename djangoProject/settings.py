@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'easy_thumbnails',
     "debug_toolbar",
     'rest_framework',
+    'django_social_share'
 ]
 
 MIDDLEWARE = [

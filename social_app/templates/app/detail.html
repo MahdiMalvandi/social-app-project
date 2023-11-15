@@ -1,4 +1,5 @@
 {% load static %}
+{% load social_share %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,6 +40,18 @@
         {% endif %} </button>
     <p class="likes-count">{{ post.likes.count }}</p>
     </div>
+    {% post_to_facebook post "Post to Facebook!" %}
+{% post_to_twitter "New Song: {{ post.discription }}. Check it out!" post "Post to Twitter" %}
+{% post_to_gplus post "Post to Google+!" %}
+{% post_to_linkedin post %}
+{% send_email post.discription "New Song: {{ post.discription }}. Check it out!" post "Share via email" %}
+{% post_to_reddit "New Song: {{ post.discription }}" post %}
+{% post_to_telegram "New Song: {{ post.discription }}." post %}
+{% post_to_whatsapp post "Share via WhatsApp" %}
+{% save_to_pinterest post %}
+{% add_pinterest_script %} // Required for save_to_pinterest. Add to the end of body tag.
+{% copy_to_clipboard post "Copy to clipboard!" %}
+{% add_copy_script %} // Required for copy_to_clipboard. Add to the end of body tag.
 <br><br><br><br><br>
 <h1 class="text-center font-bold text-4xl">similar posts</h1>
 {% for similar_post in similar_posts %}

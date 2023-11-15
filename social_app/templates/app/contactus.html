@@ -3,6 +3,14 @@
     {{ form.as_div }}
     <input type="submit" value="send">
 </form>
+{% if answers %}
+    {% for answer in answers %}
+        {% if answer.answer != '' %}
+                <h2>Your Ticket Subject is '{{ answer.get_subject_display }}' and body '{{ answer.body }}' and admin answer is '{{ answer.answer }}'</h2>
+        {% endif %}
+
+    {% endfor %}
+{% endif %}
 {% if sent %}
     <h2>Your Ticket has been sent</h2>
 {% endif %}

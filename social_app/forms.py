@@ -68,12 +68,13 @@ class EditUserForm(forms.ModelForm):
 
 class TicketForm(forms.Form):
     SUBJECT_CHOICES = (
-        ("پیشنهاد", "پیشنهاد"),
-        ("باگ", "باگ"),
+        ("BG", "bug"),
+        ("PR", "proposal"),
+        ("CR", "critics"),
     )
 
-    message = forms.CharField(widget=forms.Textarea, required=True)
-    title = forms.ChoiceField(choices=SUBJECT_CHOICES, required=True)
+    body = forms.CharField(widget=forms.Textarea, required=True)
+    subject = forms.ChoiceField(choices=SUBJECT_CHOICES, required=True)
 
 
 class AddPostForm(forms.ModelForm):
