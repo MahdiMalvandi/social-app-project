@@ -18,10 +18,12 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.decorators import api_view
 from .serializers import *
+from rest_framework.views import APIView
+
 
 # Create your views here.
 
-
+# region views
 def log_out(request):
     logout(request)
     return HttpResponse('you have logged out')
@@ -56,7 +58,7 @@ def ticket(request):
     else:
         form = TicketForm()
     context = {"form": form, 'sent': sent,
-               "answers":answers
+               "answers": answers
                }
 
     return render(request, "app/contactus.html", context)
@@ -213,7 +215,7 @@ def add_comment(request, pk):
         if form.is_valid():
             cd = form.cleaned_data
             Comments.objects.create(author=request.user, text=cd["text"], post_for=post)
-            messages.success(request,'your message has been added')
+            messages.success(request, 'your message has been added')
             return redirect('social:detail', post.pk)
     else:
         form = CommentForm()
@@ -365,18 +367,87 @@ def follow_user(request):
         return JsonResponse({'error': "Invalid request"})
 
 
-@api_view(['GET', 'POST'])
+# endregion
+
+# region function base view
+@api_view(['GET', 'PUT', "DELETE"])
+def posts_api(request: Request, post_id: int = None):
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        return Response(None, status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        serializer = PostSerializer(instance=post)
+        return Response(serializer.data, status.HTTP_200_OK)
+    if request.method == 'PUT':
+        serializer = PostAddSerializer(instance=post, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "edit post successfully"}, status.HTTP_202_ACCEPTED)
+        else:
+            return Response(None, status.HTTP_400_BAD_REQUEST)
+    if request.method == "DELETE":
+        post.delete()
+        return Response({"message": "delete post successfully"}, status.HTTP_200_OK)
+
+
+@api_view(["GET", "POST"])
 def all_posts_api(request: Request):
     if request.method == 'GET':
-        posts_query_set = Post.objects.prefetch_related().all()
-        posts = PostSerializer(instance=posts_query_set, many=True)
+        post = Post.objects.prefetch_related().all()
+        posts = PostSerializer(instance=post, many=True)
         return Response(posts.data, status.HTTP_200_OK)
-    elif request.method == 'POST':
-        post = PostAddSerializer(data=request.data)
-
-        if post.is_valid():
-            post.save()
+    if request.method == "POST":
+        serializer = PostAddSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
             return Response({"message": "add post successfully"}, status.HTTP_201_CREATED)
-    print(f'request method == {request.method}')
-    return Response(None, status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(None, status.HTTP_400_BAD_REQUEST)
 
+
+# endregion
+
+# region class base view
+class ManageAllPostsView(APIView):
+    def get(self, request: Request):
+        post = Post.objects.prefetch_related().all()
+        posts = PostSerializer(instance=post, many=True)
+        return Response(posts.data, status.HTTP_200_OK)
+
+    def post(self, request: Request):
+        serializer = PostAddSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "add post successfully"}, status.HTTP_201_CREATED)
+        else:
+            return Response(None, status.HTTP_400_BAD_REQUEST)
+
+
+class ManageDetailPostView(APIView):
+    def get_posts(self, request: Request, post_id):
+        try:
+            post = Post.objects.get(id=post_id)
+        except Post.DoesNotExist:
+            return Response(None, status.HTTP_404_NOT_FOUND)
+
+    def get(self, request: Request, post_id):
+        post = self.get_posts(post_id)
+        serializer = PostSerializer(instance=post)
+        return Response(serializer.data, status.HTTP_200_OK)
+
+    def put(self, request: Request, post_id):
+        post = self.get_posts(post_id)
+        serializer = PostAddSerializer(instance=post, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "edit post successfully"}, status.HTTP_202_ACCEPTED)
+        else:
+            return Response(None, status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request: Request, post_id):
+        post = self.get_posts(post_id)
+        post.delete()
+        return Response({"message": "delete post successfully"}, status.HTTP_200_OK)
+
+# endregion

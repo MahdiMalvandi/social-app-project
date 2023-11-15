@@ -50,6 +50,11 @@ urlpatterns = [
      # follow
     path('follow/', views.follow_user, name='follow user'),
 
-    path('api/posts/', views.all_posts_api)
+    path('api/posts/', views.all_posts_api, name='all posts'),
+    path('api/posts/<post_id>', views.posts_api, name="crud in a post"),
+
+    path('api/cbv/posts/', views.ManageAllPostsView.as_view()),
+    path('api/cbv/posts/<post_id>/', views.ManageDetailPostView.as_view())
+
 ]
 
